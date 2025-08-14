@@ -451,12 +451,15 @@ export default function ApplicationForm({ onSave, initialData }) {
 
       {/* Address Details */}
       <section className="p-6 rounded-lg shadow-inner bg-purple-50">
-        <h3 className="pb-2 mb-4 text-2xl font-semibold text-purple-800 border-b-2 border-purple-300">
+        <h3 className="pb-2 mb-6 text-2xl font-semibold text-purple-800 border-b-2 border-purple-300">
           Address Information / पता विवरण
         </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
+
+        {/* First Row: District + Training District */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* District */}
+          <div className="w-full">
+            <label className="block mb-2 font-medium text-gray-700">
               <RequiredLabel text="District / जिला" />
             </label>
             <select
@@ -475,8 +478,33 @@ export default function ApplicationForm({ onSave, initialData }) {
             </select>
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
+          {/* Training District */}
+          <div className="w-full">
+            <label className="block mb-2 font-medium text-gray-700">
+              <RequiredLabel text="Choice of District for Training / प्रशिक्षण हेतु जिला का चयन" />
+            </label>
+            <select
+              name="trainingDistrict"
+              value={formData.trainingDistrict}
+              onChange={handleChange}
+              required
+              className="w-full p-2 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200"
+            >
+              <option value="">Select Training District / जिला चुनें</option>
+              {DISTRICTS.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Second Row: Correspondence + Permanent Address */}
+        <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
+          {/* Correspondence Address */}
+          <div className="w-full">
+            <label className="block mb-2 font-medium text-gray-700">
               <RequiredLabel text="Correspondence Address / पत्राचार पता" />
             </label>
             <textarea
@@ -484,12 +512,14 @@ export default function ApplicationForm({ onSave, initialData }) {
               value={formData.correspondenceAddress}
               onChange={handleChange}
               required
-              className="w-full p-2 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200"
+              className="w-full p-2 border-2 border-purple-300 rounded-lg resize-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+              rows={4}
             ></textarea>
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
+          {/* Permanent Address */}
+          <div className="w-full">
+            <label className="block mb-2 font-medium text-gray-700">
               <RequiredLabel text="Permanent Address / स्थायी पता" />
             </label>
             <textarea
@@ -497,7 +527,8 @@ export default function ApplicationForm({ onSave, initialData }) {
               value={formData.permanentAddress}
               onChange={handleChange}
               required
-              className="w-full p-2 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200"
+              className="w-full p-2 border-2 border-purple-300 rounded-lg resize-none focus:border-purple-500 focus:ring focus:ring-purple-200"
+              rows={4}
             ></textarea>
           </div>
         </div>
