@@ -3,29 +3,40 @@ import { useNavigate } from "react-router-dom";
 import { sendOtp, verifyOtp } from "../services/authService";
 import { isValidMobile } from "../utils/validators";
 import Input from "../common/Input";
+import LoginImage from "../../assets/login.jpeg";
 
 export default function Login() {
-  const navigate = useNavigate(); // <--- useNavigate hook
+  const navigate = useNavigate();
   const [mobile, setMobile] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
 
   const handleSendOtp = async () => {
     if (isValidMobile(mobile)) {
-      const res = await sendOtp(mobile);
-      if (res.success) setOtpSent(true);
+      try {
+        const res = await sendOtp(mobile);
+        if (res.success) setOtpSent(true);
+        else alert("Failed to send OTP. Try again!");
+      } catch (err) {
+        console.error(err);
+        alert("Error sending OTP. Check console.");
+      }
     } else {
       alert("Enter a valid 10-digit mobile number");
     }
   };
 
   const handleVerify = async () => {
-    const ok = await verifyOtp(mobile, otp);
-    if (ok) {
-      // Navigate to the ApplicationForm page after successful OTP
-      navigate("/form");
-    } else {
-      alert("Invalid OTP (use 1234 for demo)");
+    try {
+      const ok = await verifyOtp(mobile, otp);
+      if (ok) {
+        navigate("/form");
+      } else {
+        alert("Invalid OTP (use 1234 for demo)");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error verifying OTP. Check console.");
     }
   };
 
@@ -33,7 +44,7 @@ export default function Login() {
     <div className="flex flex-col h-screen overflow-hidden md:flex-row bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
       <div className="hidden h-full md:flex md:w-1/2">
         <img
-          src="/public/image/login.jpeg"
+          src={LoginImage}
           alt="Student"
           className="object-cover w-full h-full"
         />
