@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { sendOtp, verifyOtp } from "../services/authService";
 import { isValidMobile } from "../utils/validators";
 import Input from "../common/Input";
+import LogoRight from "../../assets/logo-right.png"; // BSMFC Logo
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,14 +41,30 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden md:flex-row">
-      {/* Left Form Section */}
-      <div className="flex items-center justify-center w-full h-full p-8 md:w-1/2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">
-        <div className="w-full max-w-md p-8 border border-gray-200 shadow-2xl bg-white/90 backdrop-blur-md rounded-2xl">
-          <h2 className="mb-6 text-3xl font-extrabold text-center text-pink-700">
-            User Login
-          </h2>
+    <div className="flex items-center justify-center min-h-screen px-4 bg-gray-50">
+      <div className="w-full max-w-md p-6 space-y-6 bg-white border shadow-lg rounded-xl sm:p-8">
+        {/* Logo */}
+        <div className="flex justify-center">
+          <img
+            src={LogoRight}
+            alt="BSMFC Logo"
+            className="w-20 h-20 sm:w-24 sm:h-24"
+          />
+        </div>
 
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-center text-blue-800 sm:text-3xl">
+          User Login
+        </h2>
+
+        {/* Department & Scheme Name */}
+        <div className="text-sm text-center text-gray-700 sm:text-base">
+          <p>Bihar State Minorities Financial Corporation Ltd.</p>
+          <p>Mukhyamantri Shram Shakti Yojna</p>
+        </div>
+
+        {/* Form */}
+        <div className="space-y-4">
           {!otpSent ? (
             <>
               <Input
@@ -59,7 +76,7 @@ export default function Login() {
               />
               <button
                 onClick={handleSendOtp}
-                className="w-full py-2 mt-5 font-semibold text-white transition-all duration-300 transform rounded-lg shadow-lg bg-gradient-to-r from-green-400 to-green-600 hover:scale-105"
+                className="w-full py-2 font-semibold text-white transition-all duration-200 bg-green-600 rounded-lg hover:bg-green-700 hover:shadow-md"
               >
                 Send OTP
               </button>
@@ -75,47 +92,31 @@ export default function Login() {
               />
               <button
                 onClick={handleVerify}
-                className="w-full py-2 mt-5 font-semibold text-white transition-all duration-300 transform rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-blue-700 hover:scale-105"
+                className="w-full py-2 font-semibold text-white transition-all duration-200 bg-blue-600 rounded-lg hover:bg-blue-700 hover:shadow-md"
               >
                 Verify OTP
               </button>
             </>
           )}
-
-          <p className="mt-6 text-sm text-center text-gray-600">
-            By logging in, you agree to our{" "}
-            <a href="#" className="font-semibold text-blue-600 hover:underline">
-              Terms & Conditions
-            </a>
-          </p>
-
-          <p className="mt-4 text-sm text-center text-gray-700">
-            Don't have an account?{" "}
-            <button
-              onClick={() => navigate("/register")}
-              className="font-semibold text-pink-600 hover:underline"
-            >
-              Register here
-            </button>
-          </p>
         </div>
-      </div>
 
-      {/* Right Info Section */}
-      <div className="relative flex flex-col items-center justify-center w-full h-full p-8 overflow-hidden text-center bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-600 md:w-1/2">
-        {/* Decorative glowing shapes */}
-        <div className="absolute w-[400px] h-[400px] bg-pink-400/30 rounded-full blur-3xl top-10 left-10 animate-pulse"></div>
-        <div className="absolute w-[300px] h-[300px] bg-indigo-400/20 rounded-full blur-2xl bottom-10 right-10 animate-ping"></div>
+        {/* Footer Links */}
+        <p className="mt-4 text-xs text-center text-gray-500">
+          By logging in, you agree to our{" "}
+          <a href="#" className="text-blue-600 hover:underline">
+            Terms & Conditions
+          </a>
+        </p>
 
-        {/* Glass Panel */}
-        <div className="relative z-10 px-8 py-10 transition-all duration-500 transform border shadow-2xl bg-white/10 backdrop-blur-md rounded-3xl border-white/20 hover:scale-105">
-          <h1 className="mb-4 text-4xl font-extrabold tracking-wide text-yellow-300 drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]">
-            Mukhyamantri Shram Shakti Yojna
-          </h1>
-          <p className="text-lg font-semibold tracking-wide text-white drop-shadow-md">
-            Bihar State Minority Financial Corporation
-          </p>
-        </div>
+        <p className="mt-2 text-sm text-center text-gray-600">
+          Don't have an account?{" "}
+          <button
+            onClick={() => navigate("/register")}
+            className="text-blue-600 hover:underline"
+          >
+            Register here
+          </button>
+        </p>
       </div>
     </div>
   );

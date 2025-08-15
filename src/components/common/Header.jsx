@@ -1,11 +1,14 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LogoRight from "../../assets/logo-right.png"; // BSMFC Logo
 import LogoLeft from "../../assets/logoleft.jpg"; // Bihar Govt Logo
 import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
+  // केवल 3 main menu items
   const menuItems = [
     { name: "Home", link: "#" },
     {
@@ -17,55 +20,25 @@ export default function Header() {
       ],
     },
     {
-      name: "Schemes",
-      arrow: true,
-      subMenu: [
-        { name: "Scheme 1", link: "#" },
-        { name: "Scheme 2", link: "#" },
-      ],
-    },
-    {
-      name: "RTI",
-      arrow: true,
-      subMenu: [
-        { name: "RTI 1", link: "#" },
-        { name: "RTI 2", link: "#" },
-      ],
-    },
-    {
-      name: "BSMFC Database",
-      arrow: true,
-      subMenu: [
-        { name: "Database 1", link: "#" },
-        { name: "Database 2", link: "#" },
-      ],
-    },
-    {
-      name: "Contact",
-      arrow: true,
-      subMenu: [
-        { name: "Contact 1", link: "#" },
-        { name: "Contact 2", link: "#" },
-      ],
-    },
-    { name: "FAQs", link: "#" },
-    {
-      name: "Download",
+      name: "Downloads",
       arrow: true,
       subMenu: [
         { name: "Forms", link: "#" },
         { name: "Documents", link: "#" },
       ],
     },
-    { name: "Gallery", link: "#" },
-    { name: "Career", badge: "NEW", link: "#" },
-    { name: "Tenders", link: "#" },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   return (
     <header className="w-full">
       {/* Top Contact Info */}
-      <div className="flex flex-col items-center gap-2 px-4 py-2 text-sm bg-blue-800 sm:items-start sm:flex-row sm:gap-16 sm:px-48 text-cyan-300">
+      <div className="flex flex-col items-center gap-1 px-4 py-1 text-sm bg-blue-800 sm:flex-row sm:items-center sm:gap-16 sm:px-48 text-cyan-300">
         <span className="text-[#39B3E4] font-semibold">
           Call : 0612-2204975
         </span>
@@ -76,7 +49,7 @@ export default function Header() {
 
       {/* Logo and Title */}
       <div className="flex flex-col items-center justify-between px-4 py-3 bg-white sm:flex-row sm:px-48">
-        {/* Left side: Main Logo + Title */}
+        {/* Left: Logo + Title */}
         <div className="flex flex-col items-center space-y-2 sm:flex-row sm:items-start sm:space-y-0 sm:space-x-4">
           <img src={LogoRight} alt="BSMFC Logo" className="w-24 h-24" />
           <div className="text-center sm:text-left">
@@ -93,7 +66,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Right side: Button + Govt Logo */}
+        {/* Right: Govt Logo + Button */}
         <div className="relative flex flex-col items-center mt-2 space-y-2 sm:flex-row sm:items-start sm:mt-0 sm:space-y-0 sm:space-x-4">
           <img
             src={LogoLeft}
@@ -118,29 +91,24 @@ export default function Header() {
 
       {/* Navigation Menu */}
       <nav
-        className={`text-white bg-blue-800 transition-all duration-300 ${
+        className={`text-white bg-blue-800 ${
           isMenuOpen ? "flex" : "hidden"
         } sm:flex`}
       >
-        <ul className="flex flex-col items-center justify-center w-full px-4 py-6 space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6">
+        <ul className="flex flex-col items-center justify-center w-full px-4 py-6 space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0">
           {menuItems.map((item, index) => (
-            <li key={index} className="relative text-center group">
+            <li key={index} className="relative group">
               <a
                 href={item.link}
                 className="flex items-center justify-center px-4 py-2 font-semibold transition-all border-b-2 border-transparent hover:border-blue-500 hover:text-green-300"
               >
                 {item.name}
                 {item.arrow && <ChevronDown size={14} className="ml-1" />}
-                {item.badge && (
-                  <span className="px-1 ml-1 text-xs text-white bg-red-600 rounded">
-                    {item.badge}
-                  </span>
-                )}
               </a>
 
-              {/* Submenu */}
+              {/* Sub-menu */}
               {item.subMenu && (
-                <ul className="absolute left-0 z-50 hidden w-48 py-2 mt-1 bg-blue-800 rounded shadow-lg group-hover:block">
+                <ul className="absolute left-0 z-50 hidden w-48 py-2 mt-1 bg-blue-800 rounded shadow-lg top-full group-hover:block">
                   {item.subMenu.map((sub, subIndex) => (
                     <li
                       key={subIndex}
@@ -154,6 +122,16 @@ export default function Header() {
               )}
             </li>
           ))}
+
+          {/* Logout Button */}
+          <li>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 font-semibold text-white transition-all translate-x-32 bg-red-600 border-b-2 border-transparent rounded hover:border-red-500 hover:text-red-300 hover:bg-red-700"
+            >
+              Logout
+            </button>
+          </li>
         </ul>
       </nav>
     </header>

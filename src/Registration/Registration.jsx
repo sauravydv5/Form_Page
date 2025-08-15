@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "../components/common/Input";
+import LogoRight from "../assets/logo-right.png"; // BSMFC Logo
 
 export default function Registration() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     mobile: "",
     email: "",
     password: "",
@@ -17,7 +19,9 @@ export default function Registration() {
   };
 
   const handleRegister = () => {
-    if (!formData.name.trim()) return alert("Please enter your full name");
+    if (!formData.firstName.trim())
+      return alert("Please enter your first name");
+    if (!formData.lastName.trim()) return alert("Please enter your last name");
     if (!/^\d{10}$/.test(formData.mobile))
       return alert("Enter a valid 10-digit mobile number");
     if (!/\S+@\S+\.\S+/.test(formData.email))
@@ -32,86 +36,103 @@ export default function Registration() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden md:flex-row">
-      {/* Left Form Section */}
-      <div className="flex items-center justify-center flex-1 p-4 sm:p-6 md:p-8 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">
-        <div className="w-full max-w-sm p-6 border border-gray-200 shadow-2xl sm:max-w-md sm:p-8 bg-white/90 backdrop-blur-md rounded-2xl">
-          <h2 className="mb-6 text-2xl font-extrabold text-center text-pink-700 sm:text-3xl">
-            Create an Account
-          </h2>
+    <div className="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-pink-50 to-pink-100">
+      <div className="w-full max-w-lg p-8 space-y-6 bg-white border shadow-lg rounded-2xl">
+        {/* Logo */}
+        <div className="flex justify-center">
+          <img
+            src={LogoRight}
+            alt="BSMFC Logo"
+            className="w-20 h-20 md:w-24 md:h-24"
+          />
+        </div>
 
-          <div className="space-y-4">
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-center text-pink-700 md:text-3xl">
+          Create an Account
+        </h2>
+
+        {/* Department & Scheme Name */}
+        <div className="text-sm leading-tight text-center text-gray-700 md:text-base">
+          <p>Bihar State Minorities Financial Corporation Ltd.</p>
+          <p>Mukhyamantri Shram Shakti Yojna</p>
+        </div>
+
+        {/* Form Fields */}
+        <div className="space-y-4">
+          {/* First Name & Last Name in one row for larger screens */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Input
-              label="Full Name"
+              label="First Name"
               type="text"
-              value={formData.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              placeholder="Enter your full name"
+              value={formData.firstName}
+              onChange={(e) => handleChange("firstName", e.target.value)}
+              placeholder="Enter first name"
             />
             <Input
-              label="Mobile Number"
-              type="tel"
-              value={formData.mobile}
-              onChange={(e) => handleChange("mobile", e.target.value)}
-              placeholder="Enter mobile number"
-            />
-            <Input
-              label="Email Address"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              placeholder="Enter your email"
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={formData.password}
-              onChange={(e) => handleChange("password", e.target.value)}
-              placeholder="Enter password"
-            />
-            <Input
-              label="Confirm Password"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={(e) => handleChange("confirmPassword", e.target.value)}
-              placeholder="Confirm password"
+              label="Last Name"
+              type="text"
+              value={formData.lastName}
+              onChange={(e) => handleChange("lastName", e.target.value)}
+              placeholder="Enter last name"
             />
           </div>
 
+          <Input
+            label="Mobile Number"
+            type="tel"
+            value={formData.mobile}
+            onChange={(e) => handleChange("mobile", e.target.value)}
+            placeholder="Enter mobile number"
+          />
+          <Input
+            label="Email Address"
+            type="email"
+            value={formData.email}
+            onChange={(e) => handleChange("email", e.target.value)}
+            placeholder="Enter your email"
+          />
+          <Input
+            label="Password"
+            type="password"
+            value={formData.password}
+            onChange={(e) => handleChange("password", e.target.value)}
+            placeholder="Enter password"
+          />
+          <Input
+            label="Confirm Password"
+            type="password"
+            value={formData.confirmPassword}
+            onChange={(e) => handleChange("confirmPassword", e.target.value)}
+            placeholder="Confirm password"
+          />
+        </div>
+
+        {/* Register Button */}
+        <button
+          onClick={handleRegister}
+          className="w-full py-3 mt-4 text-lg font-semibold text-white transition-colors bg-pink-600 rounded-lg hover:bg-pink-700"
+        >
+          Register
+        </button>
+
+        {/* Footer Links */}
+        <p className="mt-4 text-xs text-center text-gray-500 md:text-sm">
+          By creating an account, you agree to our{" "}
+          <a href="#" className="text-pink-600 hover:underline">
+            Terms & Conditions
+          </a>
+        </p>
+
+        <p className="mt-2 text-sm text-center text-gray-600">
+          Already have an account?{" "}
           <button
-            onClick={handleRegister}
-            className="w-full py-2 mt-6 font-semibold text-white transition-all duration-300 transform rounded-lg shadow-lg bg-gradient-to-r from-pink-500 to-pink-700 hover:scale-105"
+            onClick={() => navigate("/")}
+            className="text-pink-600 hover:underline"
           >
-            Register
+            Login here
           </button>
-
-          <p className="mt-6 text-sm text-center text-gray-600">
-            Already have an account?{" "}
-            <button
-              onClick={() => navigate("/")}
-              className="font-semibold text-pink-600 hover:underline"
-            >
-              Login here
-            </button>
-          </p>
-        </div>
-      </div>
-
-      {/* Right Info Section */}
-      <div className="relative flex-col items-center justify-center flex-1 hidden p-6 text-center md:flex sm:p-8 lg:p-12 bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-600">
-        {/* Decorative glowing shapes */}
-        <div className="absolute w-[250px] sm:w-[300px] md:w-[400px] h-[250px] sm:h-[300px] md:h-[400px] bg-pink-400/30 rounded-full blur-3xl top-10 left-10 animate-pulse"></div>
-        <div className="absolute w-[200px] sm:w-[250px] md:w-[300px] h-[200px] sm:h-[250px] md:h-[300px] bg-indigo-400/20 rounded-full blur-2xl bottom-10 right-10 animate-ping"></div>
-
-        {/* Glass Panel */}
-        <div className="relative z-10 px-6 py-8 transition-all duration-500 transform border shadow-2xl sm:px-8 sm:py-10 bg-white/10 backdrop-blur-md rounded-3xl border-white/20 hover:scale-105">
-          <h1 className="mb-4 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-wide text-yellow-300 drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]">
-            Mukhyamantri Shram Shakti Yojna
-          </h1>
-          <p className="text-base font-semibold tracking-wide text-white sm:text-lg drop-shadow-md">
-            Bihar State Minority Financial Corporation
-          </p>
-        </div>
+        </p>
       </div>
     </div>
   );
