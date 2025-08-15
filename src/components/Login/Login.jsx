@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { sendOtp, verifyOtp } from "../services/authService";
 import { isValidMobile } from "../utils/validators";
 import Input from "../common/Input";
-import LoginImage from "../../assets/login.jpeg";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -41,18 +40,11 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden md:flex-row bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-      <div className="hidden h-full md:flex md:w-1/2">
-        <img
-          src={LoginImage}
-          alt="Student"
-          className="object-cover w-full h-full"
-        />
-      </div>
-
-      <div className="flex items-center justify-center w-full h-full p-8 md:w-1/2">
+    <div className="flex flex-col h-screen overflow-hidden md:flex-row">
+      {/* Left Form Section */}
+      <div className="flex items-center justify-center w-full h-full p-8 md:w-1/2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">
         <div className="w-full max-w-md p-8 border border-gray-200 shadow-2xl bg-white/90 backdrop-blur-md rounded-2xl">
-          <h2 className="mb-6 text-3xl font-extrabold text-center text-indigo-700">
+          <h2 className="mb-6 text-3xl font-extrabold text-center text-pink-700">
             User Login
           </h2>
 
@@ -92,12 +84,36 @@ export default function Login() {
 
           <p className="mt-6 text-sm text-center text-gray-600">
             By logging in, you agree to our{" "}
-            <a
-              href="#"
-              className="font-semibold text-indigo-600 hover:underline"
-            >
+            <a href="#" className="font-semibold text-blue-600 hover:underline">
               Terms & Conditions
             </a>
+          </p>
+
+          <p className="mt-4 text-sm text-center text-gray-700">
+            Don't have an account?{" "}
+            <button
+              onClick={() => navigate("/register")}
+              className="font-semibold text-pink-600 hover:underline"
+            >
+              Register here
+            </button>
+          </p>
+        </div>
+      </div>
+
+      {/* Right Info Section */}
+      <div className="relative flex flex-col items-center justify-center w-full h-full p-8 overflow-hidden text-center bg-gradient-to-br from-indigo-800 via-purple-700 to-pink-600 md:w-1/2">
+        {/* Decorative glowing shapes */}
+        <div className="absolute w-[400px] h-[400px] bg-pink-400/30 rounded-full blur-3xl top-10 left-10 animate-pulse"></div>
+        <div className="absolute w-[300px] h-[300px] bg-indigo-400/20 rounded-full blur-2xl bottom-10 right-10 animate-ping"></div>
+
+        {/* Glass Panel */}
+        <div className="relative z-10 px-8 py-10 transition-all duration-500 transform border shadow-2xl bg-white/10 backdrop-blur-md rounded-3xl border-white/20 hover:scale-105">
+          <h1 className="mb-4 text-4xl font-extrabold tracking-wide text-yellow-300 drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]">
+            Mukhyamantri Shram Shakti Yojna
+          </h1>
+          <p className="text-lg font-semibold tracking-wide text-white drop-shadow-md">
+            Bihar State Minority Financial Corporation
           </p>
         </div>
       </div>

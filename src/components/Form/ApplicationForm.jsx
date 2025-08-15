@@ -55,11 +55,41 @@ export default function ApplicationForm({ onSave, initialData }) {
   };
 
   const handleFileChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.files[0] }));
+    const file = e.target.files[0];
+    const { name } = e.target;
+
+    if (!file) return;
+
+    const pdfFields = ["aadhaarCard", "incomeCert", "resCert"];
+    const imageFields = ["marksheet"];
+
+    if (pdfFields.includes(name) && file.type !== "application/pdf") {
+      alert("Only PDF files are allowed for this field.");
+      e.target.value = "";
+      return;
+    }
+
+    if (
+      imageFields.includes(name) &&
+      !["image/png", "image/jpeg", "image/jpg"].includes(file.type)
+    ) {
+      alert("Only PNG, JPG, or JPEG images are allowed for this field.");
+      e.target.value = "";
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: file }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Extra mobile validation
+    if (!/^\d{10}$/.test(formData.mobile)) {
+      alert("Mobile number must be exactly 10 digits.");
+      return;
+    }
+
     onSave(formData);
     navigate("/preview");
   };
@@ -75,10 +105,16 @@ export default function ApplicationForm({ onSave, initialData }) {
       onSubmit={handleSubmit}
       className="p-8 mx-auto space-y-8 bg-white shadow-2xl max-w-7xl rounded-xl"
     >
-      <h2 className="mb-6 text-4xl font-bold text-center text-indigo-700">
-        Application Form for Training under Sankalp Yojna / संकल्प योजना के तहत
-        प्रशिक्षण के लिए आवेदन
+      <h2 className="mb-1 text-3xl font-bold tracking-wide text-center text-indigo-800">
+        Application Form for Training under Mukhyamantri Shram Shakti Yojna
       </h2>
+      <h3 className="mb-4 text-xl font-semibold text-center text-indigo-800">
+        मुख्यमंत्री श्रम शक्ति योजना के तहत प्रशिक्षण के लिए आवेदन
+      </h3>
+      <p className="mb-8 text-base italic font-medium text-center text-gray-600">
+        Department: Bihar State Minority Financial Corporation <br />
+        विभाग: बिहार राज्य अल्पसंख्यक वित्तीय निगम
+      </p>
 
       {/* Personal Details */}
       <section className="p-6 rounded-lg shadow-inner bg-indigo-50">
@@ -246,7 +282,7 @@ export default function ApplicationForm({ onSave, initialData }) {
             />
           </div>
 
-          {/* Aadhaar Card */}
+          {/* Aadhaar Card - PDF */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">
               <RequiredLabel text="Upload Aadhaar Card / आधार कार्ड अपलोड करें" />
@@ -254,6 +290,7 @@ export default function ApplicationForm({ onSave, initialData }) {
             <input
               type="file"
               name="aadhaarCard"
+              accept=".pdf"
               onChange={handleFileChange}
               required
               className="w-full p-2 border-2 border-indigo-300 rounded-lg cursor-pointer focus:ring focus:ring-indigo-200"
@@ -275,7 +312,7 @@ export default function ApplicationForm({ onSave, initialData }) {
             />
           </div>
 
-          {/* Income Certificate */}
+          {/* Income Certificate - PDF */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">
               <RequiredLabel text="Income Certificate / आय प्रमाण पत्र" />
@@ -283,6 +320,7 @@ export default function ApplicationForm({ onSave, initialData }) {
             <input
               type="file"
               name="incomeCert"
+              accept=".pdf"
               onChange={handleFileChange}
               required
               className="w-full p-2 border-2 border-indigo-300 rounded-lg cursor-pointer focus:ring focus:ring-indigo-200"
@@ -372,11 +410,13 @@ export default function ApplicationForm({ onSave, initialData }) {
               <RequiredLabel text="Mobile Number / मोबाइल नंबर" />
             </label>
             <input
-              type="number"
+              type="text"
               name="mobile"
               value={formData.mobile}
               onChange={handleChange}
               required
+              pattern="\d{10}"
+              title="Please enter exactly 10 digits"
               className="w-full p-2 border-2 border-green-300 rounded-lg focus:border-green-500 focus:ring focus:ring-green-200"
             />
           </div>
@@ -424,25 +464,28 @@ export default function ApplicationForm({ onSave, initialData }) {
 
           <div>
             <label className="block mb-1 font-medium text-gray-700">
-              Residence Certificate Number / निवास प्रमाण पत्र संख्या
+              <RequiredLabel text="Residence Certificate Number / निवास प्रमाण पत्र संख्या" />
             </label>
             <input
               type="text"
               name="residenceNo"
               value={formData.residenceNo}
               onChange={handleChange}
+              required
               className="w-full p-2 border-2 border-yellow-300 rounded-lg focus:border-yellow-500 focus:ring focus:ring-yellow-200"
             />
           </div>
 
           <div>
             <label className="block mb-1 font-medium text-gray-700">
-              Upload Residence Certificate / निवास प्रमाण पत्र अपलोड करें
+              <RequiredLabel text="Upload Residence Certificate / निवास प्रमाण पत्र अपलोड करें" />
             </label>
             <input
               type="file"
               name="resCert"
+              accept=".pdf"
               onChange={handleFileChange}
+              required
               className="w-full p-2 border-2 border-yellow-300 rounded-lg cursor-pointer focus:ring focus:ring-yellow-200"
             />
           </div>
@@ -547,7 +590,14 @@ export default function ApplicationForm({ onSave, initialData }) {
                 name="education"
                 value={level}
                 checked={formData.education.includes(level)}
-                onChange={handleChange}
+                onChange={(e) => {
+                  // Allow only one selection at a time
+                  setFormData({
+                    ...formData,
+                    education: e.target.checked ? [level] : [],
+                  });
+                }}
+                required={formData.education.length === 0} // Ensures at least one is selected
                 className="accent-pink-500"
               />
               {level}
@@ -556,12 +606,14 @@ export default function ApplicationForm({ onSave, initialData }) {
 
           <div>
             <label className="block mb-1 font-medium text-gray-700">
-              Upload Marksheet / अंक तालिका अपलोड करें
+              <RequiredLabel text="Upload Marksheet / अंक तालिका अपलोड करें" />
             </label>
             <input
               type="file"
               name="marksheet"
+              accept=".png,.jpg,.jpeg"
               onChange={handleFileChange}
+              required
               className="w-full p-2 border-2 border-pink-300 rounded-lg cursor-pointer focus:ring focus:ring-pink-200"
             />
           </div>
@@ -573,16 +625,39 @@ export default function ApplicationForm({ onSave, initialData }) {
         <h3 className="pb-2 mb-4 text-2xl font-semibold text-gray-800 border-b-2 border-gray-300">
           Other Information / अन्य जानकारी
         </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
-          <label className="block mb-1 font-medium text-gray-700">
-            Earlier Participation in Training / पहले प्रशिक्षण में भाग लिया
+
+        <label className="block mb-2 font-medium text-gray-700">
+          क्या आपने पहले बिहार राज्य अल्पसंख्यक वित्तीय निगम लिमिटेड द्वारा
+          प्रायोजित किसी कौशल विकास कार्यक्रम में प्रशिक्षण लिया है?{" "}
+          <span className="text-red-500">*</span>
+        </label>
+
+        <div className="flex items-center gap-6">
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="earlierParticipation"
+              value="Yes"
+              checked={formData.earlierParticipation === "Yes"}
+              onChange={handleChange}
+              required
+              className="accent-gray-600"
+            />
+            हाँ
           </label>
-          <textarea
-            name="earlierParticipation"
-            value={formData.earlierParticipation}
-            onChange={handleChange}
-            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-gray-500 focus:ring focus:ring-gray-200"
-          ></textarea>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="earlierParticipation"
+              value="No"
+              checked={formData.earlierParticipation === "No"}
+              onChange={handleChange}
+              required
+              className="accent-gray-600"
+            />
+            नहीं
+          </label>
         </div>
       </section>
 
