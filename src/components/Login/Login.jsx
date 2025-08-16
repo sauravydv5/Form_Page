@@ -31,7 +31,7 @@ function Login() {
         navigate("/reset-password", { state: { mobile } });
       } else {
         alert("OTP verified! Login successful.");
-        navigate("/form");
+        navigate("/dashboard");
       }
     } else {
       alert("Invalid OTP (use 1234 for demo)");

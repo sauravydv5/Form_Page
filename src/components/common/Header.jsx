@@ -33,6 +33,9 @@ function Header() {
     localStorage.removeItem("user");
     navigate("/");
   };
+  const handleFrom = () => {
+    navigate("/form");
+  };
 
   const handleStatusClick = () => {
     navigate(`/status`);
@@ -74,7 +77,10 @@ function Header() {
             alt="Bihar Govt Logo"
             className="w-20 h-24 md:mr-72"
           />
-          <button className="px-4 py-2 font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 md:-translate-y-1 md:-translate-x-28 md:mr-72">
+          <button
+            onClick={handleFrom}
+            className="px-4 py-2 font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 md:-translate-y-1 md:-translate-x-28 md:mr-72"
+          >
             Apply for Skill Training
           </button>
         </div>

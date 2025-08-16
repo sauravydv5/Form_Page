@@ -51,12 +51,15 @@ export default function DashboardPage({
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100">
-      <div className="w-full max-w-md p-6 bg-white shadow-2xl sm:max-w-lg lg:max-w-xl sm:p-8 rounded-3xl">
-        <h2 className="mb-6 text-2xl font-extrabold text-center text-indigo-700 sm:mb-8 sm:text-3xl">
+      <div
+        className="w-full max-w-md p-6 shadow-2xl sm:max-w-lg lg:max-w-xl sm:p-8 rounded-3xl"
+        style={{ backgroundColor: "#372948" }}
+      >
+        <h2 className="mb-6 text-2xl font-extrabold text-center text-white sm:mb-8 sm:text-3xl">
           Application Dashboard
         </h2>
 
-        <div className="flex flex-col items-center w-full gap-4 p-6 text-white shadow-xl sm:gap-6 sm:p-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl">
+        <div className="flex flex-col items-center w-full gap-4 p-6 text-white shadow-xl sm:gap-6 sm:p-8 rounded-2xl">
           <div className="text-center">
             <p className="text-base font-medium sm:text-lg">
               Application Number
@@ -90,7 +93,7 @@ export default function DashboardPage({
           )}
         </div>
 
-        <p className="mt-6 text-sm text-center text-gray-600 sm:mt-8 sm:text-base">
+        <p className="mt-6 text-sm text-center text-gray-300 sm:mt-8 sm:text-base">
           Please keep this information safe for future reference.
         </p>
 
