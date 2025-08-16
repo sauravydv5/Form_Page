@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function PreviewPage({ data }) {
+function PreviewPage({ data }) {
   const navigate = useNavigate();
 
   const handleFinalSubmit = () => {
@@ -51,9 +51,11 @@ export default function PreviewPage({ data }) {
           onClick={handleFinalSubmit}
           className="w-full px-8 py-3 text-lg font-semibold text-white transition-all bg-blue-600 rounded-lg shadow-md md:w-auto hover:bg-blue-700 hover:scale-105"
         >
-          Final Submit
+          Submit
         </button>
       </div>
     </div>
   );
 }
+
+export default PreviewPage;

@@ -1,110 +1,170 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DISTRICTS } from "../constants/districts";
-import { RELIGIONS } from "../constants/religions";
+import PersonalDetails from "./ApplicationFromDetails/PersonalDetails";
+import ContactAndNative from "./ApplicationFromDetails/ContactAndNative";
+import AddressDetails from "./ApplicationFromDetails/AddressDetails";
+import EducationAndOther from "./ApplicationFromDetails/EducationAndOther";
+import TraningSelection from "./ApplicationFromDetails/TraningSelection";
 
-export default function ApplicationForm({ onSave, initialData }) {
+// Initial form data state
+const initialData = {
+  name: "",
+  fatherName: "",
+  motherName: "",
+  dob: "",
+  religion: "",
+  gender: "",
+  handicapped: "",
+  disabilityDegree: "",
+  aadhaarNo: "",
+  aadhaarCard: null,
+  annualIncome: "",
+  incomeCert: null,
+  nationality: "",
+  maritalStatus: "",
+  email: "",
+  mobile: "",
+  telephone: "",
+  nativeOfBihar: "",
+  residenceNo: "",
+  resCert: null,
+  district: "",
+  correspondenceAddress: "",
+  permanentAddress: "",
+  trainingDistrict: "",
+  education: [],
+  marksheet: null,
+  earlierParticipation: "",
+  trainingDistrict1: "",
+  trainingDistrict2: "",
+  trainingDistrict3: "",
+  jobRole1: "",
+  jobRole2: "",
+  jobRole3: "",
+
+  // name: "Saurav Kumar",
+  // fatherName: "Ramesh Kumar",
+  // motherName: "Sunita Kumari",
+  // dob: "1998-05-12",
+  // religion: "Hindu",
+  // gender: "Male",
+  // handicapped: "No",
+  // disabilityDegree: "",
+  // aadhaarNo: "123456789012",
+  // aadhaarCard: null, // file upload ke liye
+  // annualIncome: "500000",
+  // incomeCert: null, // file upload ke liye
+  // nationality: "Indian",
+  // maritalStatus: "Single",
+  // email: "saurav.kumar@example.com",
+  // mobile: "9876543210",
+  // telephone: "0612-1234567",
+  // nativeOfBihar: "Yes",
+  // residenceNo: "123, ABC Colony",
+  // resCert: null, // file upload ke liye
+  // district: "Patna",
+  // correspondenceAddress: "123, ABC Colony, Patna, Bihar",
+  // permanentAddress: "123, ABC Colony, Patna, Bihar",
+  // trainingDistrict: "Patna",
+  // education: [
+  //   { degree: "10th", board: "BSEB", year: "2014", percentage: "75" },
+  //   { degree: "12th", board: "BSEB", year: "2016", percentage: "78" },
+  //   {
+  //     degree: "Graduation",
+  //     board: "Magadh University",
+  //     year: "2020",
+  //     percentage: "72",
+  //   },
+  // ],
+  // marksheet: null, // file upload ke liye
+  // earlierParticipation: "No",
+  // trainingDistrict1: "Patna",
+  // trainingDistrict2: "Gaya",
+  // trainingDistrict3: "Buxar",
+  // jobRole1: "Software Developer",
+  // jobRole2: "Data Analyst",
+  // jobRole3: "Web Designer",
+};
+
+function ApplicationForm({ onSave }) {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState(initialData);
+  const [currentStep, setCurrentStep] = useState(1);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    fatherName: "",
-    motherName: "",
-    dob: "",
-    religion: "",
-    gender: "",
-    handicapped: "",
-    disabilityDegree: "",
-    aadhaarNo: "",
-    aadhaarCard: null,
-    annualIncome: "",
-    incomeCert: null,
-    nationality: "",
-    maritalStatus: "",
-    email: "",
-    mobile: "",
-    telephone: "",
-    nativeOfBihar: "",
-    residenceNo: "",
-    resCert: null,
-    district: "",
-    correspondenceAddress: "",
-    permanentAddress: "",
-    trainingDistrict: "",
-    education: [],
-    marksheet: null,
-    earlierParticipation: "",
-  });
-
-  useEffect(() => {
-    if (initialData) setFormData(initialData);
-  }, [initialData]);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData((prev) => {
-        const updated = checked
-          ? [...prev.education, value]
-          : prev.education.filter((v) => v !== value);
-        return { ...prev, education: updated };
-      });
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+  // Function to move to the next step
+  const nextStep = () => {
+    setCurrentStep((prev) => prev + 1);
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    const { name } = e.target;
-
-    if (!file) return;
-
-    const pdfFields = ["aadhaarCard", "incomeCert", "resCert"];
-    const imageFields = ["marksheet"];
-
-    if (pdfFields.includes(name) && file.type !== "application/pdf") {
-      alert("Only PDF files are allowed for this field.");
-      e.target.value = "";
-      return;
-    }
-
-    if (
-      imageFields.includes(name) &&
-      !["image/png", "image/jpeg", "image/jpg"].includes(file.type)
-    ) {
-      alert("Only PNG, JPG, or JPEG images are allowed for this field.");
-      e.target.value = "";
-      return;
-    }
-
-    setFormData((prev) => ({ ...prev, [name]: file }));
+  // Function to move to the previous step
+  const prevStep = () => {
+    setCurrentStep((prev) => prev - 1);
   };
 
+  // The final submit function
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Extra mobile validation
     if (!/^\d{10}$/.test(formData.mobile)) {
       alert("Mobile number must be exactly 10 digits.");
       return;
     }
-
     onSave(formData);
     navigate("/preview");
   };
 
-  const RequiredLabel = ({ text }) => (
-    <>
-      {text} <span className="text-red-600">*</span>
-    </>
-  );
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <PersonalDetails
+            formData={formData}
+            setFormData={setFormData}
+            nextStep={nextStep}
+          />
+        );
+      case 2:
+        return (
+          <ContactAndNative
+            formData={formData}
+            setFormData={setFormData}
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
+      case 3:
+        return (
+          <AddressDetails
+            formData={formData}
+            setFormData={setFormData}
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
+      case 4:
+        return (
+          <TraningSelection
+            formData={formData}
+            setFormData={setFormData}
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
+      case 5:
+        return (
+          <EducationAndOther
+            formData={formData}
+            setFormData={setFormData}
+            prevStep={prevStep}
+            handleSubmit={handleSubmit}
+          />
+        );
+      default:
+        return <div>Form Completed!</div>;
+    }
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-8 mx-auto space-y-8 bg-white shadow-2xl max-w-7xl rounded-xl"
-    >
+    <div className="p-8 mx-auto space-y-8 bg-white shadow-2xl max-w-7xl rounded-xl">
       <h2 className="mb-1 text-3xl font-bold tracking-wide text-center text-indigo-800">
         Application Form for Training under Mukhyamantri Shram Shakti Yojna
       </h2>
@@ -112,564 +172,64 @@ export default function ApplicationForm({ onSave, initialData }) {
         मुख्यमंत्री श्रम शक्ति योजना के तहत प्रशिक्षण के लिए आवेदन
       </h3>
       <p className="mb-8 text-base italic font-medium text-center text-gray-600">
-        Department: Bihar State Minority Financial Corporation <br />
-        विभाग: बिहार राज्य अल्पसंख्यक वित्तीय निगम
+        Department: Bihar State Minority Financial Corporation <br /> विभाग:
+        बिहार राज्य अल्पसंख्यक वित्तीय निगम
       </p>
 
-      {/* Personal Details */}
-      <section className="p-6 rounded-lg shadow-inner bg-indigo-50">
-        <h3 className="pb-2 mb-4 text-2xl font-semibold text-indigo-800 border-b-2 border-indigo-300">
-          Personal Details / व्यक्तिगत विवरण
-        </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {/* Applicant Name */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Applicant Name / आवेदक का नाम" />
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Father's Name */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Father's Name / पिता का नाम" />
-            </label>
-            <input
-              type="text"
-              name="fatherName"
-              value={formData.fatherName}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Mother's Name */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Mother's Name / माता का नाम" />
-            </label>
-            <input
-              type="text"
-              name="motherName"
-              value={formData.motherName}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Date of Birth */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Date of Birth / जन्म तिथि" />
-            </label>
-            <input
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Religion */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Religion / धर्म" />
-            </label>
-            <select
-              name="religion"
-              value={formData.religion}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            >
-              <option value="">Select Religion / धर्म चुनें</option>
-              {RELIGIONS.map((rel) => (
-                <option key={rel} value={rel}>
-                  {rel}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Gender */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Gender / लिंग" />
-            </label>
-            <div className="flex gap-4">
-              {["Male", "Female", "Other"].map((g) => (
-                <label key={g} className="flex items-center gap-1">
-                  <input
-                    type="radio"
-                    name="gender"
-                    value={g}
-                    checked={formData.gender === g}
-                    onChange={handleChange}
-                    required
-                    className="accent-indigo-500"
-                  />
-                  {g === "Male"
-                    ? "Male / पुरुष"
-                    : g === "Female"
-                    ? "Female / महिला"
-                    : "Other / अन्य"}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Handicapped */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Physically Handicapped / शारीरिक रूप से विकलांग" />
-            </label>
-            <div className="flex gap-4">
-              {["Yes", "No"].map((v) => (
-                <label key={v} className="flex items-center gap-1">
-                  <input
-                    type="radio"
-                    name="handicapped"
-                    value={v}
-                    checked={formData.handicapped === v}
-                    onChange={handleChange}
-                    required
-                    className="accent-indigo-500"
-                  />
-                  {v === "Yes" ? "Yes / हाँ" : "No / नहीं"}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Disability Degree */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              Degree of Disability / विकलांगता की डिग्री
-            </label>
-            <input
-              type="text"
-              name="disabilityDegree"
-              value={formData.disabilityDegree}
-              onChange={handleChange}
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Aadhaar Number */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Aadhaar Number / आधार संख्या" />
-            </label>
-            <input
-              type="number"
-              name="aadhaarNo"
-              value={formData.aadhaarNo}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Aadhaar Card - PDF */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Upload Aadhaar Card / आधार कार्ड अपलोड करें" />
-            </label>
-            <input
-              type="file"
-              name="aadhaarCard"
-              accept=".pdf"
-              onChange={handleFileChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg cursor-pointer focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Annual Income */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Annual Income / वार्षिक आय" />
-            </label>
-            <input
-              type="number"
-              name="annualIncome"
-              value={formData.annualIncome}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg focus:border-indigo-500 focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Income Certificate - PDF */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Income Certificate / आय प्रमाण पत्र" />
-            </label>
-            <input
-              type="file"
-              name="incomeCert"
-              accept=".pdf"
-              onChange={handleFileChange}
-              required
-              className="w-full p-2 border-2 border-indigo-300 rounded-lg cursor-pointer focus:ring focus:ring-indigo-200"
-            />
-          </div>
-
-          {/* Nationality */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Nationality / राष्ट्रीयता" />
-            </label>
-            <div className="flex gap-4">
-              {["Indian", "Non-Indian", "Other"].map((v) => (
-                <label key={v} className="flex items-center gap-1">
-                  <input
-                    type="radio"
-                    name="nationality"
-                    value={v}
-                    checked={formData.nationality === v}
-                    onChange={handleChange}
-                    required
-                    className="accent-indigo-500"
-                  />
-                  {v === "Indian"
-                    ? "Indian / भारतीय"
-                    : v === "Non-Indian"
-                    ? "Non-Indian / गैर-भारतीय"
-                    : "Other / अन्य"}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Marital Status */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Marital Status / वैवाहिक स्थिति" />
-            </label>
-            <div className="flex flex-wrap gap-4">
-              {["Married", "Unmarried", "Separated", "Divorced"].map((v) => (
-                <label key={v} className="flex items-center gap-1">
-                  <input
-                    type="radio"
-                    name="maritalStatus"
-                    value={v}
-                    checked={formData.maritalStatus === v}
-                    onChange={handleChange}
-                    required
-                    className="accent-indigo-500"
-                  />
-                  {v === "Married"
-                    ? "Married / विवाहित"
-                    : v === "Unmarried"
-                    ? "Unmarried / अविवाहित"
-                    : v === "Separated"
-                    ? "Separated / पृथक"
-                    : "Divorced / तलाकशुदा"}
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Information */}
-      <section className="p-6 rounded-lg shadow-inner bg-green-50">
-        <h3 className="pb-2 mb-4 text-2xl font-semibold text-green-800 border-b-2 border-green-300">
-          Contact Information / संपर्क विवरण
-        </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Email / ईमेल" />
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-green-300 rounded-lg focus:border-green-500 focus:ring focus:ring-green-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Mobile Number / मोबाइल नंबर" />
-            </label>
-            <input
-              type="text"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              required
-              pattern="\d{10}"
-              title="Please enter exactly 10 digits"
-              className="w-full p-2 border-2 border-green-300 rounded-lg focus:border-green-500 focus:ring focus:ring-green-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              Telephone Number with STD Code / टेलीफोन नंबर
-            </label>
-            <input
-              type="text"
-              name="telephone"
-              value={formData.telephone}
-              onChange={handleChange}
-              className="w-full p-2 border-2 border-green-300 rounded-lg focus:border-green-500 focus:ring focus:ring-green-200"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Bihar Native */}
-      <section className="p-6 rounded-lg shadow-inner bg-yellow-50">
-        <h3 className="pb-2 mb-4 text-2xl font-semibold text-yellow-800 border-b-2 border-yellow-300">
-          Bihar Native / बिहार निवासी
-        </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Native of Bihar / बिहार का मूल निवासी" />
-            </label>
-            <select
-              name="nativeOfBihar"
-              value={formData.nativeOfBihar}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-yellow-300 rounded-lg focus:border-yellow-500 focus:ring focus:ring-yellow-200"
-            >
-              <option value="">Select / चुनें</option>
-              {["Yes", "No"].map((v) => (
-                <option key={v} value={v}>
-                  {v === "Yes" ? "Yes / हाँ" : "No / नहीं"}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Residence Certificate Number / निवास प्रमाण पत्र संख्या" />
-            </label>
-            <input
-              type="text"
-              name="residenceNo"
-              value={formData.residenceNo}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-yellow-300 rounded-lg focus:border-yellow-500 focus:ring focus:ring-yellow-200"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Upload Residence Certificate / निवास प्रमाण पत्र अपलोड करें" />
-            </label>
-            <input
-              type="file"
-              name="resCert"
-              accept=".pdf"
-              onChange={handleFileChange}
-              required
-              className="w-full p-2 border-2 border-yellow-300 rounded-lg cursor-pointer focus:ring focus:ring-yellow-200"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Address Details */}
-      <section className="p-6 rounded-lg shadow-inner bg-purple-50">
-        <h3 className="pb-2 mb-6 text-2xl font-semibold text-purple-800 border-b-2 border-purple-300">
-          Address Information / पता विवरण
-        </h3>
-
-        {/* First Row: District + Training District */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* District */}
-          <div className="w-full">
-            <label className="block mb-2 font-medium text-gray-700">
-              <RequiredLabel text="District / जिला" />
-            </label>
-            <select
-              name="district"
-              value={formData.district}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200"
-            >
-              <option value="">Select District / जिला चुनें</option>
-              {DISTRICTS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Training District */}
-          <div className="w-full">
-            <label className="block mb-2 font-medium text-gray-700">
-              <RequiredLabel text="Choice of District for Training / प्रशिक्षण हेतु जिला का चयन" />
-            </label>
-            <select
-              name="trainingDistrict"
-              value={formData.trainingDistrict}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:ring focus:ring-purple-200"
-            >
-              <option value="">Select Training District / जिला चुनें</option>
-              {DISTRICTS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Second Row: Correspondence + Permanent Address */}
-        <div className="grid grid-cols-1 gap-6 mt-6 md:grid-cols-2">
-          {/* Correspondence Address */}
-          <div className="w-full">
-            <label className="block mb-2 font-medium text-gray-700">
-              <RequiredLabel text="Correspondence Address / पत्राचार पता" />
-            </label>
-            <textarea
-              name="correspondenceAddress"
-              value={formData.correspondenceAddress}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-purple-300 rounded-lg resize-none focus:border-purple-500 focus:ring focus:ring-purple-200"
-              rows={4}
-            ></textarea>
-          </div>
-
-          {/* Permanent Address */}
-          <div className="w-full">
-            <label className="block mb-2 font-medium text-gray-700">
-              <RequiredLabel text="Permanent Address / स्थायी पता" />
-            </label>
-            <textarea
-              name="permanentAddress"
-              value={formData.permanentAddress}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border-2 border-purple-300 rounded-lg resize-none focus:border-purple-500 focus:ring focus:ring-purple-200"
-              rows={4}
-            ></textarea>
-          </div>
-        </div>
-      </section>
-
-      {/* Education */}
-      <section className="p-6 rounded-lg shadow-inner bg-pink-50">
-        <h3 className="pb-2 mb-4 text-2xl font-semibold text-pink-800 border-b-2 border-pink-300">
-          Educational Qualification / शैक्षिक योग्यता
-        </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {["10th", "12th", "Graduate", "Post Graduate"].map((level) => (
-            <label key={level} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="education"
-                value={level}
-                checked={formData.education.includes(level)}
-                onChange={(e) => {
-                  // Allow only one selection at a time
-                  setFormData({
-                    ...formData,
-                    education: e.target.checked ? [level] : [],
-                  });
-                }}
-                required={formData.education.length === 0} // Ensures at least one is selected
-                className="accent-pink-500"
-              />
-              {level}
-            </label>
-          ))}
-
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              <RequiredLabel text="Upload Marksheet / अंक तालिका अपलोड करें" />
-            </label>
-            <input
-              type="file"
-              name="marksheet"
-              accept=".png,.jpg,.jpeg"
-              onChange={handleFileChange}
-              required
-              className="w-full p-2 border-2 border-pink-300 rounded-lg cursor-pointer focus:ring focus:ring-pink-200"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Other Info */}
-      <section className="p-6 rounded-lg shadow-inner bg-gray-50">
-        <h3 className="pb-2 mb-4 text-2xl font-semibold text-gray-800 border-b-2 border-gray-300">
-          Other Information / अन्य जानकारी
-        </h3>
-
-        <label className="block mb-2 font-medium text-gray-700">
-          क्या आपने पहले बिहार राज्य अल्पसंख्यक वित्तीय निगम लिमिटेड द्वारा
-          प्रायोजित किसी कौशल विकास कार्यक्रम में प्रशिक्षण लिया है?{" "}
-          <span className="text-red-500">*</span>
-        </label>
-
-        <div className="flex items-center gap-6">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="earlierParticipation"
-              value="Yes"
-              checked={formData.earlierParticipation === "Yes"}
-              onChange={handleChange}
-              required
-              className="accent-gray-600"
-            />
-            हाँ
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="earlierParticipation"
-              value="No"
-              checked={formData.earlierParticipation === "No"}
-              onChange={handleChange}
-              required
-              className="accent-gray-600"
-            />
-            नहीं
-          </label>
-        </div>
-      </section>
-
-      {/* Submit Button */}
-      <div className="mt-6 text-center">
-        <button
-          type="submit"
-          className="px-8 py-3 text-xl font-semibold text-white transition-all rounded-lg shadow-md bg-gradient-to-r from-green-400 to-green-600 hover:scale-105 hover:shadow-xl"
+      {/* Progress Indicator (Optional but good for UX) */}
+      <div className="flex justify-center mb-6">
+        <div
+          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+            currentStep >= 1 ? "bg-indigo-600" : "bg-gray-400"
+          }`}
         >
-          Save & Preview / सहेजें और पूर्वावलोकन करें
-        </button>
+          1
+        </div>
+        <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
+        <div
+          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+            currentStep >= 2 ? "bg-indigo-600" : "bg-gray-400"
+          }`}
+        >
+          2
+        </div>
+        <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
+        <div
+          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+            currentStep >= 3 ? "bg-indigo-600" : "bg-gray-400"
+          }`}
+        >
+          3
+        </div>
+        <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
+        <div
+          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+            currentStep >= 3 ? "bg-indigo-600" : "bg-gray-400"
+          }`}
+        >
+          4
+        </div>
+        <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
+        <div
+          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+            currentStep >= 4 ? "bg-indigo-600" : "bg-gray-400"
+          }`}
+        >
+          5
+        </div>
+        <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
+        <div
+          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
+            currentStep >= 4 ? "bg-indigo-600" : "bg-gray-400"
+          }`}
+        >
+          6
+        </div>
       </div>
-    </form>
+
+      {renderStep()}
+    </div>
   );
 }
+
+export default ApplicationForm;

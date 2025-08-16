@@ -4,11 +4,10 @@ import LogoRight from "../../assets/logo-right.png"; // BSMFC Logo
 import LogoLeft from "../../assets/logoleft.jpg"; // Bihar Govt Logo
 import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 
-export default function Header() {
+function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // केवल 3 main menu items
   const menuItems = [
     { name: "Home", link: "#" },
     {
@@ -35,24 +34,28 @@ export default function Header() {
     navigate("/login");
   };
 
+  const handleStatusClick = () => {
+    navigate(`/status`);
+  };
+
   return (
     <header className="w-full">
       {/* Top Contact Info */}
-      <div className="flex flex-col items-center gap-1 px-4 py-1 text-sm bg-blue-800 sm:flex-row sm:items-center sm:gap-16 sm:px-48 text-cyan-300">
+      <div className="flex flex-col items-center gap-1 px-4 py-1 text-sm bg-blue-800 md:flex-row md:items-center md:gap-16 md:px-48 text-cyan-300">
         <span className="text-[#39B3E4] font-semibold">
           Call : 0612-2204975
         </span>
-        <span className="px-0 sm:px-5 font-semibold text-[#39B3E4]">
+        <span className="px-0 md:px-5 font-semibold text-[#39B3E4]">
           Email : minocorpatna@gmail.com
         </span>
       </div>
 
       {/* Logo and Title */}
-      <div className="flex flex-col items-center justify-between px-4 py-3 bg-white sm:flex-row sm:px-48">
+      <div className="flex flex-col items-center justify-between px-4 py-3 bg-white md:flex-row md:px-48">
         {/* Left: Logo + Title */}
-        <div className="flex flex-col items-center space-y-2 sm:flex-row sm:items-start sm:space-y-0 sm:space-x-4">
+        <div className="flex flex-col items-center space-y-2 md:flex-row md:items-start md:space-y-0 md:space-x-4">
           <img src={LogoRight} alt="BSMFC Logo" className="w-24 h-24" />
-          <div className="text-center sm:text-left">
+          <div className="text-center md:text-left">
             <h1 className="text-3xl font-semibold text-blue-800">
               Bihar State Minorities Financial
               <br /> Corporation Ltd.
@@ -67,20 +70,20 @@ export default function Header() {
         </div>
 
         {/* Right: Govt Logo + Button */}
-        <div className="relative flex flex-col items-center mt-2 space-y-2 sm:flex-row sm:items-start sm:mt-0 sm:space-y-0 sm:space-x-4">
+        <div className="relative flex flex-col items-center mt-2 space-y-2 md:flex-row md:items-start md:mt-0 md:space-y-0 md:space-x-4">
           <img
             src={LogoLeft}
             alt="Bihar Govt Logo"
-            className="w-20 h-24 sm:mr-72"
+            className="w-20 h-24 md:mr-72"
           />
-          <button className="px-4 py-2 font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 sm:-translate-y-1 sm:-translate-x-28 sm:mr-72">
+          <button className="px-4 py-2 font-semibold text-white bg-green-500 rounded-md hover:bg-green-600 md:-translate-y-1 md:-translate-x-28 md:mr-72">
             Apply for Skill Training
           </button>
         </div>
       </div>
 
       {/* Mobile Menu Button */}
-      <div className="flex justify-center w-full bg-blue-800 sm:hidden">
+      <div className="flex justify-center w-full bg-blue-800 md:hidden">
         <button
           className="flex items-center justify-center w-full p-3 text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -93,9 +96,9 @@ export default function Header() {
       <nav
         className={`text-white bg-blue-800 ${
           isMenuOpen ? "flex" : "hidden"
-        } sm:flex`}
+        } md:flex`}
       >
-        <ul className="flex flex-col items-center justify-center w-full px-4 py-6 space-y-4 sm:flex-row sm:space-x-6 sm:space-y-0">
+        <ul className="flex flex-col items-center justify-center w-full px-4 py-6 space-y-4 md:flex-row md:space-x-6 md:space-y-0">
           {menuItems.map((item, index) => (
             <li key={index} className="relative group">
               <a
@@ -123,6 +126,16 @@ export default function Header() {
             </li>
           ))}
 
+          {/* Your Status Button */}
+          <li>
+            <button
+              onClick={handleStatusClick}
+              className="px-4 py-2 font-semibold text-white transition-all bg-indigo-600 border-b-2 border-transparent rounded hover:border-indigo-500 hover:text-indigo-300 hover:bg-indigo-700"
+            >
+              Your Status
+            </button>
+          </li>
+
           {/* Logout Button */}
           <li>
             <button
@@ -137,3 +150,5 @@ export default function Header() {
     </header>
   );
 }
+
+export default Header;

@@ -1,4 +1,4 @@
-export default function FileUpload({ label, name, onChange, required }) {
+function FileUpload({ label, name, onChange, required }) {
   return (
     <div>
       <label className="block mb-1 font-medium">{label}</label>
@@ -6,9 +6,11 @@ export default function FileUpload({ label, name, onChange, required }) {
         type="file"
         name={name}
         onChange={onChange}
-        className="border p-2 w-full"
+        className="w-full p-2 border"
         required={required}
       />
     </div>
   );
 }
+
+export default FileUpload;

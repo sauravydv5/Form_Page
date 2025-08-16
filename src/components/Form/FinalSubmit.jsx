@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function FinalSubmitPage({ data, onSubmit }) {
+function FinalSubmitPage({ data, onSubmit }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -54,3 +54,5 @@ export default function FinalSubmitPage({ data, onSubmit }) {
     </div>
   );
 }
+
+export default FinalSubmitPage;

@@ -1,3 +1,4 @@
+import React from "react";
 const steps = [
   { id: 1, label: "Form" },
   { id: 2, label: "Preview" },
@@ -5,10 +6,10 @@ const steps = [
   { id: 4, label: "Confirmation" },
 ];
 
-export default function Steps({ current }) {
+function Steps({ current }) {
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-3">
-      <div className="flex items-center gap-2 text-sm flex-wrap">
+    <div className="w-full max-w-4xl px-4 py-3 mx-auto">
+      <div className="flex flex-wrap items-center gap-2 text-sm">
         {steps.map((s, idx) => (
           <div key={s.id} className="flex items-center">
             <div
@@ -29,3 +30,5 @@ export default function Steps({ current }) {
     </div>
   );
 }
+
+export default Steps;

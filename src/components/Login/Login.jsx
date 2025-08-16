@@ -1,42 +1,49 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendOtp, verifyOtp } from "../services/authService";
-import { isValidMobile } from "../utils/validators";
 import Input from "../common/Input";
 import LogoRight from "../../assets/logo-right.png"; // BSMFC Logo
 
-export default function Login() {
+function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState(""); // changed from userId
+  const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
+  const [forgotPassword, setForgotPassword] = useState(false);
 
-  const handleSendOtp = async () => {
-    if (isValidMobile(mobile)) {
-      try {
-        const res = await sendOtp(mobile);
-        if (res.success) setOtpSent(true);
-        else alert("Failed to send OTP. Try again!");
-      } catch (err) {
-        console.error(err);
-        alert("Error sending OTP. Check console.");
-      }
+  // Dummy credentials
+  const dummyEmail = "user@example.com";
+  const dummyPass = "123456";
+  const dummyOtp = "1234";
+
+  // Dummy login function
+  const handleLogin = () => {
+    if (email === dummyEmail && password === dummyPass) {
+      alert("Login successful!");
+      navigate("/form");
+    } else {
+      alert("Invalid Email or Password (Try user@example.com / password)");
+    }
+  };
+
+  // Dummy OTP send
+  const handleSendOtp = () => {
+    if (mobile.length === 10) {
+      setOtpSent(true);
+      alert(`OTP sent to ${mobile} (use 1234 for demo)`);
     } else {
       alert("Enter a valid 10-digit mobile number");
     }
   };
 
-  const handleVerify = async () => {
-    try {
-      const ok = await verifyOtp(mobile, otp);
-      if (ok) {
-        navigate("/form");
-      } else {
-        alert("Invalid OTP (use 1234 for demo)");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Error verifying OTP. Check console.");
+  // Dummy OTP verify
+  const handleVerify = () => {
+    if (otp === dummyOtp) {
+      alert("OTP verified! You can reset your password now.");
+      navigate("/reset-password", { state: { mobile } });
+    } else {
+      alert("Invalid OTP (use 1234 for demo)");
     }
   };
 
@@ -54,10 +61,10 @@ export default function Login() {
 
         {/* Title */}
         <h2 className="text-2xl font-bold text-center text-blue-800 sm:text-3xl">
-          User Login
+          {forgotPassword ? "Reset Password" : "User Login"}
         </h2>
 
-        {/* Department & Scheme Name */}
+        {/* Department & Scheme */}
         <div className="text-sm text-center text-gray-700 sm:text-base">
           <p>Bihar State Minorities Financial Corporation Ltd.</p>
           <p>Mukhyamantri Shram Shakti Yojna</p>
@@ -65,14 +72,45 @@ export default function Login() {
 
         {/* Form */}
         <div className="space-y-4">
-          {!otpSent ? (
+          {!forgotPassword && !otpSent && (
             <>
               <Input
-                label="Mobile Number"
+                label="Email ID"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email ID"
+              />
+              <Input
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+              />
+              <button
+                onClick={handleLogin}
+                className="w-full py-2 font-semibold text-white transition-all duration-200 bg-green-600 rounded-lg hover:bg-green-700 hover:shadow-md"
+              >
+                Login
+              </button>
+              <p
+                className="text-sm text-right text-blue-600 cursor-pointer hover:underline"
+                onClick={() => setForgotPassword(true)}
+              >
+                Forgot Password?
+              </p>
+            </>
+          )}
+
+          {forgotPassword && !otpSent && (
+            <>
+              <Input
+                label="Registered Mobile Number"
                 type="tel"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                placeholder="Enter mobile number"
+                placeholder="Enter mobile number for OTP"
               />
               <button
                 onClick={handleSendOtp}
@@ -80,8 +118,16 @@ export default function Login() {
               >
                 Send OTP
               </button>
+              <p
+                className="text-sm text-right text-blue-600 cursor-pointer hover:underline"
+                onClick={() => setForgotPassword(false)}
+              >
+                Back to Login
+              </p>
             </>
-          ) : (
+          )}
+
+          {otpSent && (
             <>
               <Input
                 label="Enter OTP"
@@ -101,23 +147,29 @@ export default function Login() {
         </div>
 
         {/* Footer Links */}
-        <p className="mt-4 text-xs text-center text-gray-500">
-          By logging in, you agree to our{" "}
-          <a href="#" className="text-blue-600 hover:underline">
-            Terms & Conditions
-          </a>
-        </p>
+        {!forgotPassword && (
+          <>
+            <p className="mt-4 text-xs text-center text-gray-500">
+              By logging in, you agree to our{" "}
+              <a href="#" className="text-blue-600 hover:underline">
+                Terms & Conditions
+              </a>
+            </p>
 
-        <p className="mt-2 text-sm text-center text-gray-600">
-          Don't have an account?{" "}
-          <button
-            onClick={() => navigate("/register")}
-            className="text-blue-600 hover:underline"
-          >
-            Register here
-          </button>
-        </p>
+            <p className="mt-2 text-sm text-center text-gray-600">
+              Don't have an account?{" "}
+              <button
+                onClick={() => navigate("/register")}
+                className="text-blue-600 hover:underline"
+              >
+                Register here
+              </button>
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
 }
+
+export default Login;

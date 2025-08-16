@@ -1,11 +1,12 @@
-export default function Select({ label, name, options, onChange, required }) {
+import React from "react";
+function Select({ label, name, options, onChange, required }) {
   return (
     <div>
       <label className="block mb-1 font-medium">{label}</label>
       <select
         name={name}
         onChange={onChange}
-        className="border p-2 w-full"
+        className="w-full p-2 border"
         required={required}
       >
         <option value="">Select {label}</option>
@@ -18,3 +19,5 @@ export default function Select({ label, name, options, onChange, required }) {
     </div>
   );
 }
+
+export default Select;

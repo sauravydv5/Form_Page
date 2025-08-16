@@ -2,8 +2,7 @@ import { useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
-export default function ConfirmationPage() {
-  const printRef = useRef();
+function ConfirmationPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,30 +28,36 @@ export default function ConfirmationPage() {
 
   const formatValue = (value) => {
     if (!value) return "-";
-    if (value instanceof File) return value.name;
+    // Check if the value is a File (e.g., an uploaded document)
+    if (value instanceof File) {
+      // Return a span that is hidden during print
+      return <span className="print:hidden">{value.name}</span>;
+    }
     if (Array.isArray(value)) return value.join(", ");
     if (typeof value === "object") return Object.values(value).join(", ");
     return String(value);
   };
 
   return (
-    <div className="max-w-5xl p-6 mx-auto mt-8 shadow-xl rounded-xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
-      {/* Header */}
-      <div className="flex flex-col items-center justify-center mb-8 text-center">
-        <CheckCircleIcon className="text-green-600 w-14 h-14 animate-bounce" />
-        <h2 className="mt-4 text-4xl font-extrabold text-indigo-700">
-          Application Submitted Successfully!
-        </h2>
-        <p className="mt-2 text-lg text-gray-600">
-          Thank you, <span className="font-semibold">{name}</span>! Your
-          application number is{" "}
-          <span className="font-semibold">{appNumber}</span>.
-        </p>
+    <div className="max-w-5xl p-6 mx-auto mt-8 shadow-xl rounded-xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 print:bg-none print:shadow-none">
+      {/* Header and Buttons - these should be hidden during print */}
+      <div className="print:hidden">
+        <div className="flex flex-col items-center justify-center mb-8 text-center">
+          <CheckCircleIcon className="text-green-600 w-14 h-14 animate-bounce" />
+          <h2 className="mt-4 text-4xl font-extrabold text-indigo-700">
+            Application Submitted Successfully!
+          </h2>
+          <p className="mt-2 text-lg text-gray-600">
+            Thank you, <span className="font-semibold">{name}</span>! Your
+            application number is{" "}
+            <span className="font-semibold">{appNumber}</span>.
+          </p>
+        </div>
       </div>
 
-      {/* Printable Content */}
+      {/* Printable Content - This is the section to be printed */}
       <div
-        ref={printRef}
+        id="printable-content"
         className="p-6 space-y-6 bg-white border border-gray-200 shadow-lg rounded-xl"
       >
         <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-indigo-50">
@@ -79,8 +84,8 @@ export default function ConfirmationPage() {
         </table>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col items-center justify-center gap-4 mt-8 md:flex-row">
+      {/* Action Buttons - these should be hidden during print */}
+      <div className="flex flex-col items-center justify-center gap-4 mt-8 md:flex-row print:hidden">
         <button
           onClick={handlePrint}
           className="w-full px-6 py-3 text-lg font-semibold text-white transition-all bg-green-500 rounded-lg shadow-md hover:bg-green-600 hover:scale-105 md:w-auto"
@@ -97,3 +102,5 @@ export default function ConfirmationPage() {
     </div>
   );
 }
+
+export default ConfirmationPage;
