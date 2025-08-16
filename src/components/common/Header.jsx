@@ -9,7 +9,7 @@ function Header() {
   const navigate = useNavigate();
 
   const menuItems = [
-    { name: "Home", link: "#" },
+    { name: "Home", link: "/dashboard" },
     {
       name: "About",
       arrow: true,

@@ -34,7 +34,7 @@ function TraningSelection({ formData, setFormData, nextStep, prevStep }) {
     <>
       <section className="p-6 rounded-lg shadow-inner bg-purple-50">
         <h3 className="pb-2 mb-6 text-2xl font-semibold text-purple-800 border-b-2 border-purple-300">
-          Address Information / पता विवरण
+          Training & Job Role Selection / प्रशिक्षण और नौकरी की भूमिका का चयन
         </h3>
 
         {/* Choice of District for Training */}
