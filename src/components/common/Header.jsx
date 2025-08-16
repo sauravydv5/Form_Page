@@ -31,7 +31,7 @@ function Header() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    navigate("/login");
+    navigate("/");
   };
 
   const handleStatusClick = () => {
@@ -41,7 +41,7 @@ function Header() {
   return (
     <header className="w-full">
       {/* Top Contact Info */}
-      <div className="flex flex-col items-center gap-1 px-4 py-1 text-sm bg-blue-800 md:flex-row md:items-center md:gap-16 md:px-48 text-cyan-300">
+      <div className="flex flex-col items-center gap-1 px-4 py-1 text-sm bg-[#372948] md:flex-row md:items-center md:gap-16 md:px-48 text-cyan-300">
         <span className="text-[#39B3E4] font-semibold">
           Call : 0612-2204975
         </span>
@@ -52,11 +52,10 @@ function Header() {
 
       {/* Logo and Title */}
       <div className="flex flex-col items-center justify-between px-4 py-3 bg-white md:flex-row md:px-48">
-        {/* Left: Logo + Title */}
         <div className="flex flex-col items-center space-y-2 md:flex-row md:items-start md:space-y-0 md:space-x-4">
           <img src={LogoRight} alt="BSMFC Logo" className="w-24 h-24" />
           <div className="text-center md:text-left">
-            <h1 className="text-3xl font-semibold text-blue-800">
+            <h1 className="text-3xl font-semibold text-[#372948]">
               Bihar State Minorities Financial
               <br /> Corporation Ltd.
             </h1>
@@ -69,7 +68,6 @@ function Header() {
           </div>
         </div>
 
-        {/* Right: Govt Logo + Button */}
         <div className="relative flex flex-col items-center mt-2 space-y-2 md:flex-row md:items-start md:mt-0 md:space-y-0 md:space-x-4">
           <img
             src={LogoLeft}
@@ -83,7 +81,7 @@ function Header() {
       </div>
 
       {/* Mobile Menu Button */}
-      <div className="flex justify-center w-full bg-blue-800 md:hidden">
+      <div className="flex justify-center w-full bg-[#372948] md:hidden">
         <button
           className="flex items-center justify-center w-full p-3 text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -94,7 +92,7 @@ function Header() {
 
       {/* Navigation Menu */}
       <nav
-        className={`text-white bg-blue-800 ${
+        className={`text-white bg-[#372948] ${
           isMenuOpen ? "flex" : "hidden"
         } md:flex`}
       >
@@ -103,7 +101,7 @@ function Header() {
             <li key={index} className="relative group">
               <a
                 href={item.link}
-                className="flex items-center justify-center px-4 py-2 font-semibold transition-all border-b-2 border-transparent hover:border-blue-500 hover:text-green-300"
+                className="flex items-center justify-center px-4 py-2 font-semibold transition-all border-b-2 border-transparent hover:border-cyan-300 hover:text-cyan-300"
               >
                 {item.name}
                 {item.arrow && <ChevronDown size={14} className="ml-1" />}
@@ -111,11 +109,11 @@ function Header() {
 
               {/* Sub-menu */}
               {item.subMenu && (
-                <ul className="absolute left-0 z-50 hidden w-48 py-2 mt-1 bg-blue-800 rounded shadow-lg top-full group-hover:block">
+                <ul className="absolute left-0 z-50 hidden w-48 py-2 mt-1 bg-[#372948] rounded shadow-lg top-full group-hover:block">
                   {item.subMenu.map((sub, subIndex) => (
                     <li
                       key={subIndex}
-                      className="flex items-center justify-between px-4 py-2 font-semibold hover:bg-blue-700"
+                      className="flex items-center justify-between px-4 py-2 font-semibold hover:bg-[#2a2033]"
                     >
                       <a href={sub.link}>{sub.name}</a>
                       <ChevronRight size={12} />

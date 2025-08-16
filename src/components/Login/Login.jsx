@@ -5,29 +5,15 @@ import LogoRight from "../../assets/logo-right.png"; // BSMFC Logo
 
 function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState(""); // changed from userId
-  const [password, setPassword] = useState("");
   const [mobile, setMobile] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [forgotPassword, setForgotPassword] = useState(false);
 
-  // Dummy credentials
-  const dummyEmail = "user@example.com";
-  const dummyPass = "123456";
+  // Dummy OTP for demo
   const dummyOtp = "1234";
 
-  // Dummy login function
-  const handleLogin = () => {
-    if (email === dummyEmail && password === dummyPass) {
-      alert("Login successful!");
-      navigate("/form");
-    } else {
-      alert("Invalid Email or Password (Try user@example.com / password)");
-    }
-  };
-
-  // Dummy OTP send
+  // Send OTP
   const handleSendOtp = () => {
     if (mobile.length === 10) {
       setOtpSent(true);
@@ -37,11 +23,16 @@ function Login() {
     }
   };
 
-  // Dummy OTP verify
+  // Verify OTP
   const handleVerify = () => {
     if (otp === dummyOtp) {
-      alert("OTP verified! You can reset your password now.");
-      navigate("/reset-password", { state: { mobile } });
+      if (forgotPassword) {
+        alert("OTP verified! You can reset your password now.");
+        navigate("/reset-password", { state: { mobile } });
+      } else {
+        alert("OTP verified! Login successful.");
+        navigate("/form");
+      }
     } else {
       alert("Invalid OTP (use 1234 for demo)");
     }
@@ -61,7 +52,7 @@ function Login() {
 
         {/* Title */}
         <h2 className="text-2xl font-bold text-center text-blue-800 sm:text-3xl">
-          {forgotPassword ? "Reset Password" : "User Login"}
+          {forgotPassword ? "Forgot Password" : "User Login"}
         </h2>
 
         {/* Department & Scheme */}
@@ -72,45 +63,18 @@ function Login() {
 
         {/* Form */}
         <div className="space-y-4">
-          {!forgotPassword && !otpSent && (
+          {!otpSent ? (
             <>
               <Input
-                label="Email ID"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email ID"
-              />
-              <Input
-                label="Password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-              />
-              <button
-                onClick={handleLogin}
-                className="w-full py-2 font-semibold text-white transition-all duration-200 bg-green-600 rounded-lg hover:bg-green-700 hover:shadow-md"
-              >
-                Login
-              </button>
-              <p
-                className="text-sm text-right text-blue-600 cursor-pointer hover:underline"
-                onClick={() => setForgotPassword(true)}
-              >
-                Forgot Password?
-              </p>
-            </>
-          )}
-
-          {forgotPassword && !otpSent && (
-            <>
-              <Input
-                label="Registered Mobile Number"
+                label="Mobile Number"
                 type="tel"
                 value={mobile}
                 onChange={(e) => setMobile(e.target.value)}
-                placeholder="Enter mobile number for OTP"
+                placeholder={
+                  forgotPassword
+                    ? "Enter your registered mobile number"
+                    : "Enter your mobile number"
+                }
               />
               <button
                 onClick={handleSendOtp}
@@ -118,16 +82,24 @@ function Login() {
               >
                 Send OTP
               </button>
-              <p
-                className="text-sm text-right text-blue-600 cursor-pointer hover:underline"
-                onClick={() => setForgotPassword(false)}
-              >
-                Back to Login
-              </p>
+              {!forgotPassword && (
+                <p
+                  className="text-sm text-right text-blue-600 cursor-pointer hover:underline"
+                  onClick={() => setForgotPassword(true)}
+                >
+                  Forgot Password?
+                </p>
+              )}
+              {forgotPassword && (
+                <p
+                  className="text-sm text-right text-blue-600 cursor-pointer hover:underline"
+                  onClick={() => setForgotPassword(false)}
+                >
+                  Back to Login
+                </p>
+              )}
             </>
-          )}
-
-          {otpSent && (
+          ) : (
             <>
               <Input
                 label="Enter OTP"

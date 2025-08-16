@@ -26,13 +26,14 @@ function ConfirmationPage() {
     navigate("/dashboard", { state: { appNumber, name } });
   };
 
+  const handleTrackStatus = () => {
+    navigate("/status", { state: { appNumber } });
+  };
+
   const formatValue = (value) => {
     if (!value) return "-";
-    // Check if the value is a File (e.g., an uploaded document)
-    if (value instanceof File) {
-      // Return a span that is hidden during print
+    if (value instanceof File)
       return <span className="print:hidden">{value.name}</span>;
-    }
     if (Array.isArray(value)) return value.join(", ");
     if (typeof value === "object") return Object.values(value).join(", ");
     return String(value);
@@ -40,7 +41,7 @@ function ConfirmationPage() {
 
   return (
     <div className="max-w-5xl p-6 mx-auto mt-8 shadow-xl rounded-xl bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 print:bg-none print:shadow-none">
-      {/* Header and Buttons - these should be hidden during print */}
+      {/* Header */}
       <div className="print:hidden">
         <div className="flex flex-col items-center justify-center mb-8 text-center">
           <CheckCircleIcon className="text-green-600 w-14 h-14 animate-bounce" />
@@ -55,7 +56,7 @@ function ConfirmationPage() {
         </div>
       </div>
 
-      {/* Printable Content - This is the section to be printed */}
+      {/* Printable Content */}
       <div
         id="printable-content"
         className="p-6 space-y-6 bg-white border border-gray-200 shadow-lg rounded-xl"
@@ -84,7 +85,7 @@ function ConfirmationPage() {
         </table>
       </div>
 
-      {/* Action Buttons - these should be hidden during print */}
+      {/* Action Buttons */}
       <div className="flex flex-col items-center justify-center gap-4 mt-8 md:flex-row print:hidden">
         <button
           onClick={handlePrint}
@@ -97,6 +98,12 @@ function ConfirmationPage() {
           className="w-full px-6 py-3 text-lg font-semibold text-white transition-all bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 hover:scale-105 md:w-auto"
         >
           Go to Dashboard
+        </button>
+        <button
+          onClick={handleTrackStatus}
+          className="w-full px-6 py-3 text-lg font-semibold text-white transition-all bg-purple-600 rounded-lg shadow-md hover:bg-purple-700 hover:scale-105 md:w-auto"
+        >
+          Track Status
         </button>
       </div>
     </div>
