@@ -1,5 +1,5 @@
 import { DISTRICTS } from "../../constants/districts";
-import { JOB_ROLES } from "../../constants/jobRoles"; // You'll need to create this file
+import { JOB_ROLES } from "../../constants/jobRoles"; // Make sure this file exists
 
 const RequiredLabel = ({ text }) => (
   <>
@@ -14,18 +14,21 @@ function TraningSelection({ formData, setFormData, nextStep, prevStep }) {
   };
 
   const handleNext = () => {
-    // Updated validation for this page
-    if (
-      !formData.district ||
-      !formData.trainingDistrict1 ||
-      !formData.trainingDistrict2 ||
-      !formData.trainingDistrict3 ||
-      !formData.jobRole1 ||
-      !formData.jobRole2 ||
-      !formData.jobRole3
-    ) {
-      alert("Please fill in all required fields.");
-      return;
+    // Validate all required fields
+    const requiredFields = [
+      "trainingDistrict1",
+      "trainingDistrict2",
+      "trainingDistrict3",
+      "jobRole1",
+      "jobRole2",
+      "jobRole3",
+    ];
+
+    for (let field of requiredFields) {
+      if (!formData[field] || formData[field].trim() === "") {
+        alert("Please fill in all required fields.");
+        return;
+      }
     }
     nextStep();
   };
@@ -93,6 +96,8 @@ function TraningSelection({ formData, setFormData, nextStep, prevStep }) {
           ))}
         </div>
       </section>
+
+      {/* Navigation Buttons */}
       <div className="flex justify-between mt-6">
         <button
           type="button"

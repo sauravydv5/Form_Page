@@ -176,7 +176,7 @@ function ApplicationForm({ onSave }) {
         बिहार राज्य अल्पसंख्यक वित्तीय निगम
       </p>
 
-      {/* Progress Indicator (Optional but good for UX) */}
+      {/* Progress Indicator */}
       <div className="flex justify-center mb-6">
         <div
           className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
@@ -204,7 +204,7 @@ function ApplicationForm({ onSave }) {
         <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
         <div
           className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
-            currentStep >= 3 ? "bg-indigo-600" : "bg-gray-400"
+            currentStep >= 4 ? "bg-indigo-600" : "bg-gray-400"
           }`}
         >
           4
@@ -212,18 +212,10 @@ function ApplicationForm({ onSave }) {
         <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
         <div
           className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
-            currentStep >= 4 ? "bg-indigo-600" : "bg-gray-400"
+            currentStep >= 5 ? "bg-indigo-600" : "bg-gray-400"
           }`}
         >
           5
-        </div>
-        <div className="self-center w-12 h-1 mx-2 bg-gray-400"></div>
-        <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-white ${
-            currentStep >= 4 ? "bg-indigo-600" : "bg-gray-400"
-          }`}
-        >
-          6
         </div>
       </div>
 
